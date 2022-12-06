@@ -7,7 +7,6 @@
 #include <sys/types.h>
 #include <time.h>
 #include <fcntl.h>
-
 #define concatenate(hi, lo) (((unsigned long int) hi << 32) | lo)
 
 unsigned long int alpha(long int size, long int stride, int flip){
@@ -17,23 +16,26 @@ unsigned long int alpha(long int size, long int stride, int flip){
     val = (flip*(size/2)) + val;
     return val;
 }
-int * allocate_buff(long int size, long int stride){
-    int* buf = (int*)malloc(size * sizeof(int));
+
+int* random_alloc(long int size, long int stride){
+    int* buf = (int*)calloc(size, sizeof(int));
     unsigned long int val;
-    int i =0, allocs;
-    int index = 0;
+    int i, allocs;
+    int index;
     srand(420);
     int flip = 1;
-    val = alpha(size, stride, flip);
+    val = alpha(size,stride,flip);
+    index = 0;
+    i = 0;
     allocs = size/stride;
     while(i < allocs-1){
         while(buf[val] != 0 || index == val){
-            val = alpha(size, stride, flip);
+            val = alpha(size,stride,flip);
         }
         buf[index] = val;
         index = val; 
         flip = 1-flip;
-        val = alpha(size, stride, flip);
+        val = alpha(size,stride,flip);
         i++;
     }
     buf[index] = 0;
@@ -43,7 +45,7 @@ int * allocate_buff(long int size, long int stride){
 double start_access(int size, int stride, int iterations){
     int val, i, allocs;
     int index;
-    int* buf = allocate_buff(size, stride);
+    int* buf = random_alloc(size, stride);
     i = 0;
     index = 0;
     int acc = 0;
@@ -74,8 +76,8 @@ double start_access(int size, int stride, int iterations){
     return (timer_diff/iterations);
 }
 
-
 int main(int argc, char** argv){
+
     long long unsigned int size;
     unsigned long int stride;
     unsigned int iterations = 1000;
@@ -88,7 +90,7 @@ int main(int argc, char** argv){
 
     strides[0] = 4; // Strides 4 and above....
     for(int i = 1 ; i < 12; i++)
-        strides[i] = strides[i-1]*2;
+        strides[i] = strides[i-1]*4;
 
     for(int i = 0; i < 12; i++){
         for (int j = 0; j < 12; j++){

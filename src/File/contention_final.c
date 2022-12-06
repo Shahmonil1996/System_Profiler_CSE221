@@ -52,29 +52,38 @@ void startfilecontention(char * file, int pid){
   }
 
   close(fd);
-  printf("%d pid , %lu Bytes, %f sec, %f B/s, %f KB/s\n",pid, BLOCKSIZE, (timer_diff/3e9), (BLOCKSIZE)/(timer_diff/3e9), (((BLOCKSIZE)/(timer_diff/3e9))/(KB)) );
+  //printf("%d pid , %lu Bytes, %f sec, %f B/s, %f KB/s\n",pid, BLOCKSIZE, (timer_diff/(3e9)), (FILESIZE)/(timer_diff/3e9), (((FILESIZE)/(timer_diff/3e9))/(KB)) );
+  printf("%f\n",(timer_diff/(3e9)));
 }
 
 int main(int argc, char const *argv[])
 {
-  int file_fd = open(argv[2], O_RDONLY);
+  int file_fd = open("log1mb", O_RDONLY);
   FILESIZE = lseek(file_fd, 0L, SEEK_END);
   srand((unsigned int)time(NULL));
+  char * files[] = {"log1mb_1","log1mb_2","log1mb_3","log1mb_4","log1mb_5","log1mb_6",
+                  "log1mb_7","log1mb_8","log1mb_9","log1mb_10","log1mb_11","log1mb_12",
+                  "log1mb_13","log1mb_14","log1mb_15","log1mb_16","log1mb_16","log1mb_17",
+                  "log1mb_18","log1mb_19","log1mb_20","log1mb_21","log1mb_22","log1mb_23",
+                  "log1mb_24","log1mb_25","log1mb_26","log1mb_27","log1mb_28","log1mb_29",
+                  "log1mb_30"};
 
-  pid_t child_processes[100];
+  pid_t child_processes[30];
   int i;
   int n = atoi(argv[1]);
 
-  for (i = 0; i < n; ++i) {
-    if ((child_processes[i] = fork()) < 0) {
-      printf("Child process creation error for number:%d\n",i);
-      exit(0);
-    } else if (child_processes[i] == 0) {
-      startfilecontention(argv[2],child_processes[i]);
-      exit(0);
+  for(int k = 0; k < 1; k++){
+    for (i = 0; i < n; ++i) {
+      if ((child_processes[i] = fork()) < 0) {
+        printf("Child process creation error for number:%d\n",i);
+        exit(0);
+      } else if (child_processes[i] == 0) {
+        startfilecontention(files[i],child_processes[i]);
+        exit(0);
+      }
     }
+    //int count = 0;
+    while(wait(NULL) > 0);
   }
-  //int count = 0;
-  while(wait(NULL) > 0);
   return 0;
 }
