@@ -11,6 +11,7 @@ Codes run on Windows system from VS Code :
 4. CPU - new_process_cmd.c and new_process_cmd.h
 5. CPU - rdtsc.c
 6. CPU - thread.c 
+7. CPU - context_switch.c 
 
 Codes run on remote WSL in VS Code
 1. File - contention_final.c
@@ -32,29 +33,38 @@ VS code files added in the github repository
 Run commands :
 Function_Overheads.c : 
 -----------------------
-C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\Function_Overheads.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\Function_Overheads.exe
+Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\Function_Overheads.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\Function_Overheads.exe
+Run Command : Function_Overheads.exe
 
 getpid.c:
 ----------
-C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\getpid.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\getpid.exe
-
+Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\getpid.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\getpid.exe
+Run Command : ./getpid.exe
 
 loop_overhead.c:
 --------------------
-C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\loop_overhead.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\loop_overhead.exe
+Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\loop_overhead.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\loop_overhead.exe
+Run Command : ./loop_overhead.exe
 
 new_process_cmd.c:
 -------------------
-C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\new_process_cmd.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\new_process_cmd.ex
+Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\new_process_cmd.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\new_process_cmd.ex
+Run Command : ./new_process_cmd.exe
 
 rdtsc.c:
 ---------
-C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\rdtsc.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\rdtsc.exe
+Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\rdtsc.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\rdtsc.exe
+Run Command : ./rdtsc.exe
 
 thread.c 
 ----------
-C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\thread.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\thread.exe
+Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\thread.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\thread.exe
+Run Command : thread.exe
 
+context_switch.c:
+------------------
+Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\context_switch.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\context_switch.exe
+Run Command : ./context_switch.exe
 
 
 WSL on VS Code:
