@@ -22,7 +22,8 @@ Codes run on remote WSL in VS Code
 7. Network - tcp_client_startup_and_tear_down.c
 8. Memory - cache_size_final.c
 9. Memory - memory_bw.c 
-10. Memory - page_fault.c
+10. Memory - page_fault.c (Minor Fault)
+11. Memory - page-fault.c (Major fault)
 
 
 VS code for windows : Compiler used VS Code
@@ -169,3 +170,10 @@ page_fault.c (Minor):
 /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/page_fault.c -o /home/monils/CSE221_dbasu/CSE221_Project/page_fault -D _GNU_SOURCE 
 
 Run Command : ./page_fault
+
+page-fault.c (Major):
+--------------
+/usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/page-fault.c -o /home/monils/CSE221_dbasu/CSE221_Project/page-fault
+
+Run Command : ./page-fault <file with size greater than a few mbs>
+
