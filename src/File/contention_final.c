@@ -16,7 +16,7 @@ unsigned long int FILESIZE;
 
 void startfilecontention(char * file, int pid){
   void *buf = malloc(BLOCK_SIZE);
-  int fd = open(file, O_RDONLY);
+  int fd = open(file, __O_DIRECT|O_SYNC);
   system("echo 3 > /proc/sys/vm/drop_caches");
 
   long num = FILESIZE / BLOCKSIZE;
@@ -28,37 +28,43 @@ void startfilecontention(char * file, int pid){
   }
 
   unsigned int cycles_high0, cycles_low0, cycles_high1, cycles_low1;
+  
   unsigned long int timer_diff =0;
+  for(int j =0; j < 1; j++){
+    for (i = 0; i < num; i++) {
+      int offset = access_list[i];
+      //printf("Offset:%d\n",offset);
+      
+      asm volatile ("cpuid\n\t"   \
+            "rdtsc\n\t"           \
+            "mov %%edx, %0\n\t"   \
+            "mov %%eax, %1\n\t"   \
+            : "=r" (cycles_high0), "=r" (cycles_low0)  \
+            :: "%rax", "%rbx", "%rcx", "%rdx");
 
-  for (i = 0; i < num; i++) {
-    asm volatile ("cpuid\n\t"   \
-          "rdtsc\n\t"           \
-          "mov %%edx, %0\n\t"   \
-          "mov %%eax, %1\n\t"   \
-          : "=r" (cycles_high0), "=r" (cycles_low0)  \
+      lseek(fd, offset * BLOCK_SIZE, SEEK_SET); // offset
+      read(fd, buf, BLOCK_SIZE);
+      
+      asm volatile ("rdtscp\n\t"   \
+          "mov %%edx, %0\n\t"    \
+          "mov %%eax, %1\n\t"    \
+          "cpuid\n\t"            \
+          : "=r" (cycles_high1), "=r" (cycles_low1)  \
           :: "%rax", "%rbx", "%rcx", "%rdx");
 
-    lseek(fd, access_list[i] * BLOCK_SIZE, SEEK_SET); // offset
-    read(fd, buf, BLOCK_SIZE);
-    
-    asm volatile ("rdtscp\n\t"   \
-        "mov %%edx, %0\n\t"    \
-        "mov %%eax, %1\n\t"    \
-        "cpuid\n\t"            \
-        : "=r" (cycles_high1), "=r" (cycles_low1)  \
-        :: "%rax", "%rbx", "%rcx", "%rdx");
-
-    timer_diff += concatenate(cycles_high1, cycles_low1) - concatenate(cycles_high0, cycles_low0);
+      timer_diff += concatenate(cycles_high1, cycles_low1) - concatenate(cycles_high0, cycles_low0);
+      //printf("%f\n",(timer_diff/(3e9)));
+    }
   }
 
   close(fd);
-  //printf("%d pid , %lu Bytes, %f sec, %f B/s, %f KB/s\n",pid, BLOCKSIZE, (timer_diff/(3e9)), (FILESIZE)/(timer_diff/3e9), (((FILESIZE)/(timer_diff/3e9))/(KB)) );
-  printf("%f\n",(timer_diff/(3e9)));
+  printf("%d pid , %lu Bytes, %f (microsec), %f B/s, %f KB/s\n",pid, BLOCKSIZE, (timer_diff/(3e3*num)), (FILESIZE)/(timer_diff/3e9), (((FILESIZE)/(timer_diff/3e9))/(KB)) );
+  //printf("%f\n",(timer_diff/(3e9)));
 }
 
 int main(int argc, char const *argv[])
 {
-  int file_fd = open("log1mb", O_RDONLY);
+  int file_fd = open("log1mb", __O_DIRECT|O_SYNC);
   FILESIZE = lseek(file_fd, 0L, SEEK_END);
   srand((unsigned int)time(NULL));
   char * files[] = {"log1mb_1","log1mb_2","log1mb_3","log1mb_4","log1mb_5","log1mb_6",

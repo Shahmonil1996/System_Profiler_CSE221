@@ -185,5 +185,5 @@ int main()
 
 		x=0;
     }
-    sleep(50);
+    Sleep(50);
 }

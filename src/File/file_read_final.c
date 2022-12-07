@@ -1,132 +1,113 @@
-#include <stdio.h>
-#include <sys/types.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <sched.h>
+#include <sys/resource.h>
 #include <unistd.h>
+#include "benchmark.h"
+#include <sys/types.h>
 #include <time.h>
 #include <fcntl.h>
 
-const long BLOCKSIZE = 4*1024;
-unsigned long int FILESIZE;
-
-#define KB 1024ULL
-#define MB (1024ULL*1024ULL)
-#define GB (1024ULL*1024ULL*1024ULL)
-#define BLOCK_SIZE (4*KB)
+cpu_set_t  mask;
 #define concatenate(hi, lo) (((unsigned long int) hi << 32) | lo)
 
+unsigned long int alpha(long int size, long int stride, int flip){
+    int x = rand() % size;
+    x = (x < 0) ? (x)*(-1) : (x);
+    unsigned long int val = (stride*(x))%(size/2);
+    val = (flip*(size/2)) + val;
+    return val;
+}
 
-double sequential_reads(char * file, void* buf)
-{
-    int fd = open(file, O_SYNC);
-    system("echo 3 > /proc/sys/vm/drop_caches");
+int* random_alloc(long int size, long int stride){
+    int* buf = (int*)calloc(size, sizeof(int));
+    unsigned long int val;
+    int i, allocs;
+    int index;
+    srand(420);
+    int flip = 1;
+    val = alpha(size,stride,flip);
+    index = 0;
+    i = 0;
+    allocs = size/stride;
+    while(i < allocs-1){
+        while(buf[val] != 0 || index == val){
+            val = alpha(size,stride,flip);
+        }
+        buf[index] = val;
+        index = val; 
+        flip = 1-flip;
+        val = alpha(size,stride,flip);
+        i++;
+    }
+    buf[index] = 0;
+    return buf;
+}
 
-	unsigned int cycles_high0, cycles_low0, cycles_high1, cycles_low1;
-  unsigned long int timer_diff =0;
+double start_access(int size, int stride, int iterations){
+    int val, i, allocs;
+    int index;
+    int* buf = random_alloc(size, stride);
+    i = 0;
+    index = 0;
+    int acc = 0;
+    unsigned int cycles_high0, cycles_low0, cycles_high1, cycles_low1;
+    unsigned long int timer_diff =0;
 
-  while (1) {
-      asm volatile ("cpuid\n\t"   \
+    asm volatile ("cpuid\n\t"   \
         "rdtsc\n\t"           \
         "mov %%edx, %0\n\t"   \
         "mov %%eax, %1\n\t"   \
         : "=r" (cycles_high0), "=r" (cycles_low0)  \
         :: "%rax", "%rbx", "%rcx", "%rdx");
 
-      ssize_t bytes = read(fd, buf, BLOCKSIZE); // return #byte when read successfully
-      if (bytes <= 0) {
-          break;
-      }
-
-      asm volatile ("rdtscp\n\t"   \
+    while(i<iterations){
+        index = buf[index];
+        i++;
+    }
+    
+     asm volatile ("rdtscp\n\t"   \
         "mov %%edx, %0\n\t"    \
         "mov %%eax, %1\n\t"    \
         "cpuid\n\t"            \
         : "=r" (cycles_high1), "=r" (cycles_low1)  \
         :: "%rax", "%rbx", "%rcx", "%rdx");
 
-      timer_diff += concatenate(cycles_high1, cycles_low1) - concatenate(cycles_high0, cycles_low0);
-  }
-  close(fd);
-
-  long num = FILESIZE / BLOCKSIZE;
-  //printf("[SEQ] num:%lu \n",num);
-  //printf("[SEQ] total_time : %lu, num: %lu, final time: %f\n", timer_diff, num, (timer_diff/num/3e9));
-  return (timer_diff / num / 3e9);
-}
-
-double random_reads(char * file, void* buf)
-{
-    int i = 0;
-    int fd = open(file, O_SYNC);
-    system("echo 3 > /proc/sys/vm/drop_caches");
-
-	unsigned int cycles_high0, cycles_low0, cycles_high1, cycles_low1;
-    unsigned long int timer_diff =0;
-
-    long num = FILESIZE / BLOCKSIZE;
-    //printf("[RAND] num:%lu\n",num);
-    for (i = 0; i < num; i++) {
-        long k = rand() % num;
-        
-        asm volatile ("cpuid\n\t"   \
-          "rdtsc\n\t"           \
-          "mov %%edx, %0\n\t"   \
-          "mov %%eax, %1\n\t"   \
-          : "=r" (cycles_high0), "=r" (cycles_low0)  \
-          :: "%rax", "%rbx", "%rcx", "%rdx");
-
-        lseek(fd, k * BLOCKSIZE, SEEK_SET); // offset
-        read(fd, buf, BLOCKSIZE);
-
-        asm volatile ("rdtscp\n\t"   \
-          "mov %%edx, %0\n\t"    \
-          "mov %%eax, %1\n\t"    \
-          "cpuid\n\t"            \
-          : "=r" (cycles_high1), "=r" (cycles_low1)  \
-          :: "%rax", "%rbx", "%rcx", "%rdx");
-
-        timer_diff += concatenate(cycles_high1, cycles_low1) - concatenate(cycles_high0, cycles_low0);
-    }
-    close(fd);
-    //printf("[RAND] total_time : %lu, num: %lu, final time: %f\n", timer_diff, num, (timer_diff/num/3e9));
-    return (timer_diff / num / 3e9);
-}
-
-int main(int argc, const char *argv[]) //input the filesize and name of file
-{
-    printf("Usage : sudo sshfs -o allow_other,IdentityFile=/home/monils/.ssh/id_rsa.pub  <username>@ieng6-ece-20.ucsd.edu:<remote_dir_path> /mnt/remote_dir\n");
-    srand((unsigned int)time(NULL));
-    void *buf = malloc(BLOCKSIZE);
-    printf("File(KB) Seq(s) Rand(s) BW_Seq(KB/s) BW_Rand(KB/s)\n");
-    int remote = atoi(argv[1]);
-    if(remote){
-      char * files[8] = {"/mnt/remote_dir/log8kb","/mnt/remote_dir/log16kb","/mnt/remote_dir/log32kb","/mnt/remote_dir/log64kb","/mnt/remote_dir/log128kb","/mnt/remote_dir/log256kb","/mnt/remote_dir/log512kb","/mnt/remote_dir/log1mb"};
-      printf("Remote Version\n");
-      for(int i = 0; i < 8; i++){  
-        int file_fd = open(files[i], __O_DIRECT|O_SYNC);
-        FILESIZE = lseek(file_fd, 0L, SEEK_END);
-        double seq_read_time = sequential_reads(files[i], buf);
-        double rand_read_time = random_reads(files[i], buf);
-        
-        //printf("Sequential : %f (s) Random : %f (s) \n", seq_read_time, rand_read_time);
-        printf("%lu , %f, %f, %f, %f\n", (FILESIZE/KB),  seq_read_time, rand_read_time, (BLOCK_SIZE/seq_read_time/KB), (BLOCK_SIZE/rand_read_time/KB));
-      }
-    }
-    else{
-      char * files[8] = {"log1mb","log2mb","log4mb","log8mb","log16mb","log32mb","log64mb","log128mb"};
-      printf("Local Version\n");
-      for(int i = 0; i < 8; i++){  
-        int file_fd = open(files[i], __O_DIRECT|O_SYNC);
-        FILESIZE = lseek(file_fd, 0L, SEEK_END);
-        double seq_read_time = sequential_reads(files[i], buf);
-        double rand_read_time = random_reads(files[i], buf);
-        
-        //printf("Sequential : %f (s) Random : %f (s) \n", seq_read_time, rand_read_time);
-        printf("%lu , %f, %f, %f, %f\n", (FILESIZE/MB),  seq_read_time, rand_read_time, (BLOCK_SIZE/seq_read_time/MB), (BLOCK_SIZE/rand_read_time/MB));
-      }
-    }
-    
+    timer_diff = concatenate(cycles_high1, cycles_low1) - concatenate(cycles_high0, cycles_low0);
     free(buf);
+    return (timer_diff/iterations);
+}
+void assignToThisCore(int core_id)
+{
+    CPU_ZERO(&mask);
+    CPU_SET(core_id, &mask);
+    sched_setaffinity(0, sizeof(mask), &mask);
+}
+int main(int argc, char** argv){
+    assignToThisCore(0);
+    long long unsigned int size;
+    unsigned long int stride;
+    unsigned int iterations = 1000;
+    setpriority(PRIO_PROCESS, getpid(), -20);
+    int sizes [12];
+    int strides[12];
+    sizes[0] = 4096; // Sizes 4K and above... 
+    for(int i = 1 ; i < 12; i++)
+        sizes[i] = sizes[i-1]*2;
+
+    strides[0] = 4; // Strides 4 and above....
+    for(int i = 1 ; i < 12; i++)
+        strides[i] = strides[i-1]*4;
+
+    for(int i = 0; i < 12; i++){
+        for (int j = 0; j < 12; j++){
+            stride = strides[j];
+            size = sizes[i];
+            if(stride < size){
+                double timer_diff = start_access(size, stride, iterations);
+                printf("[FINAL] (stride,iterations,size,timer): %d, %d, %llu, %f\n", stride, iterations, size, timer_diff);
+            }
+        }
+    }   
     return 0;
 }
-
-
