@@ -163,6 +163,14 @@ Run Command : ./src/Network/ping_in_tcp_server  (in one terminal)
 Run Command : sudo ./src/Network/ping_in_tcp_client (in another terminal with hostname set to "127.0.0.1" in line 155 ### servaddr.sin_addr.s_addr = inet_addr("192.168.43.90");  ###)
 
 
+TCP based local measurements (WORKING):
+-------------------------------
+tcp_client_startup_and_tear_down.c: 
+Build Command : gcc-9  -g src/Network/tcp_client_startup_and_tear_down.c -o src/Network/tcp_client_startup_and_tear_down
+
+Running files :
+Run Command : ./src/Network/tcp_client_startup_and_tear_down (in another terminal with hostname set to "127.0.0.1" in line50 ###servaddr.sin_addr.s_addr = inet_addr("142.250.80.100");###)
+
 TCP based remote measurements (WORKING):
 -------------------------------
 tcp_client_startup_and_tear_down.c: 
