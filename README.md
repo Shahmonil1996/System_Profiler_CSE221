@@ -24,8 +24,8 @@ Codes run on remote WSL in VS Code
 7. Network - tcp_client_startup_and_tear_down.c
 8. Memory - cache_size_final.c
 9. Memory - memory_bw.c 
-10. Memory - page_fault.c (Minor Fault)
-11. Memory - page-fault.c (Major fault)
+10. Memory - page_fault_minor.c (Minor Fault)
+11. Memory - page-fault_major.c (Major fault)
 
 
 VS code for windows : Compiler used VS Code
@@ -116,17 +116,17 @@ Build Command : gcc-9  -g src/Memory/memory_bw.c -o src/Memory/memory_bw -D _GNU
 
 Run Command : ./src/Memory/memory_bw
 
-page_fault.c (Minor):
+page_fault_minor.c (Minor):
 --------------
-Build Command: gcc-9  -g src/Memory/page_fault.c -o src/Memory/page_fault -D _GNU_SOURCE 
+Build Command: gcc-9  -g src/Memory/page_fault_minor.c -o src/Memory/page_fault_minor -D _GNU_SOURCE 
 
-Run Command : ./src/Memory/page_fault
+Run Command : ./src/Memory/page_fault_minor
 
-page-fault.c (Major):
+page-fault_major.c (Major):
 --------------
-Build Command: gcc-9  -g src/Memory/page-fault.c -o src/Memory/page-fault
+Build Command: gcc-9  -g src/Memory/page-fault_major.c -o src/Memory/page-fault_major
 
-Run Command : ./src/Memory/page-fault <file with size greater than a few mbs>
+Run Command : ./src/Memory/page-fault_major <file with size greater than a few mbs>
 
 
 ping_in_icmp.c : 
