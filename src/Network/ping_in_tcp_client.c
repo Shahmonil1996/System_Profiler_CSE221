@@ -38,7 +38,7 @@ void func(int sockfd)
 	int iteration_count = 1000;
 	long int total_time = 0;
 	float total_bw = 0;
-	int transfer_size[] ={400,800,1600,3200,6400,12800,16370,16374,25600};
+	int transfer_size[] ={352,400,800,1600,3200,6400,12800,16370,16374,25600,51200,102400,204800};
 	int length_of_array = sizeof(transfer_size)/sizeof(int); 
 	int iter = 0;
 	float burst_size = 0;
@@ -72,6 +72,9 @@ void func(int sockfd)
 			//tick_start_client = rdtsc();
 			tick_start_client = rdtsc();
 			write_bytes = write(sockfd, buff_to_be_sent, length+1);
+			
+			//printf("Write completed \n");
+			
 			read(sockfd, buff_to_be_received, length+1);
 			tick_end_client = rdtsc();
 			float bw = 0;
@@ -85,19 +88,19 @@ void func(int sockfd)
 				printf("error \n");
 				exit(0);
 			}
-			if(strcmp(buff_to_be_received,buff_to_be_sent)!=0)
+			/*if(strcmp(buff_to_be_received,buff_to_be_sent)!=0)
 			{
 				printf("Size of Buff Received =%ld and Size of Buff Sent =%ld \n",strlen(buff_to_be_received),strlen(buff_to_be_sent));
 				printf("error \n");
 				exit(0);
-			}
+			}*/
 			bzero(buff_to_be_sent, sizeof(buff_to_be_sent));
 			strcpy(buff_to_be_sent,"");
 			
 			//float time_taken = 0;
 			//total_time_tick_start_client += tick_start_client ;
 			
-			printf("bw=%f for time =%ld\n",bw,time_taken);
+			//printf("bw=%f for time =%ld\n",bw,time_taken);
 			burst_size = length+1;
 			total_bw += bw;
 			free(buff_to_be_received);
@@ -112,26 +115,31 @@ void func(int sockfd)
 		printf("Average bw =%.5f and average time=%f for size=%d\n",average_bw,average_time,4*transfer_size[iter]);
 		iter++;
 		strcpy(buff,"");
+		total_bw = 0;
+		total_time_taken = 0;
 	}
 	bzero(buff, sizeof(buff));
 	read(sockfd, buff, sizeof(buff));
-	printf("From Server : %s", buff);
+	printf("Exiting loop : \n");
 
     char buff_second[] = "exit";
 	int n2;
 
-	uint64_t tick_start , tick_end ;
+	uint64_t tick_start_rdtsc , tick_end_rdtsc ;
     
-	tick_start = rdtsc();
-	write(sockfd, buff_second, sizeof(buff_second));
+	tick_start_rdtsc = rdtsc();
+	//write(sockfd, buff_second, sizeof(buff_second));
 	//bzero(buff_second, sizeof(buff_second));
-	read(sockfd, buff_second, sizeof(buff_second));
-	tick_end = rdtsc();
-	printf("From Server : %s", buff_second);
-	if ((strncmp(buff_second, "exit", 4)) == 0) {
+	//(sockfd, buff_second, sizeof(buff_second));
+	tick_end_rdtsc = rdtsc();
+	printf("Rdtsc Value =%ld \n",tick_end_rdtsc-tick_start_rdtsc);
+	
+	//printf("From Server : %s", buff_second);
+	/*if ((strncmp(buff_second, "exit", 4)) == 0) {
 			printf("Client Exit...\n");
 			return ;
 		}
+	*/
 }
 
 int main()
@@ -152,31 +160,39 @@ int main()
 
 	// assign IP, PORT
 	servaddr.sin_family = AF_INET ;//AF_INET;
-	servaddr.sin_addr.s_addr = inet_addr("192.168.43.90"); //inet_addr("192.168.43.90");//inet_addr("127.0.0.1");
+	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1") ;//inet_addr("142.250.80.100");  //inet_addr("127.0.0.1") inet_addr("65.109.105.56");-loopback and inet_addr("142.250.80.100") for remote (https://urldefense.com/v3/__http://www.google.com__;!!Mih3wA!GJLefQkNSNMhWhxxRMqKhaDdNgFZVBHIbVzfQpe-uzEvBsj6oT7fiuE3k-LlvN7qhmkcZfzoKwzH1g$ ) 
 	servaddr.sin_port = htons(PORT);
 	long long int cycle_high_start , cycle_low_start , cycle_high_end , cycle_low_end;
 
 	// connect the client socket to server socket
-	asm("cpuid");
-    asm volatile("rdtsc" : "=cycle_high" (cycle_high_start), "=cycle_low" (cycle_low_start)); 
+	//asm("cpuid");
+    //asm volatile("rdtsc" : "=cycle_high" (cycle_high_start), "=cycle_low" (cycle_low_start)); 
 	
 	//int return_flag = connect(sockfd, (SA*)&servaddr, sizeof(servaddr));
 	///printf("Return Flag =%d \n",return_flag);
-    if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr))
-		!= 0) {
+	uint64_t tick_start_connect,tick_end_connect;
+	tick_start_connect = rdtsc();
+	int result = connect(sockfd, (SA*)&servaddr, sizeof(servaddr));
+	tick_end_connect = rdtsc();
+	if (result!= 0) {
 		printf("connection with the server failed...\n");
 		exit(0);
 	}
 	else
     {   
-        asm("cpuid");
-    	asm volatile("rdtsc" : "=cycle_high" (cycle_high_end), "=cycle_low" (cycle_low_end));
+        tick_end_connect = rdtsc();
+		//asm("cpuid");
+    	//asm volatile("rdtsc" : "=cycle_high" (cycle_high_end), "=cycle_low" (cycle_low_end));
 		printf("connected to the server..\n");
-    	printf("Final Value is %lld %lld \n", cycle_high_end - cycle_high_start, cycle_low_end-cycle_low_start);
+    	printf("Final Value of Startup is  =%ld\n", tick_end_connect - tick_start_connect);
     }
 	// function for chat
 	func(sockfd);
 
 	// close the socket
+	uint64_t tick_start_down,tick_end_down;
+	tick_start_down = rdtsc();
 	close(sockfd);
+	tick_end_down = rdtsc();
+	printf("Final Value of Tearing down is  =%ld\n", tick_end_down - tick_start_down);
 }

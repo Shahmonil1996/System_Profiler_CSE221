@@ -22,10 +22,11 @@ Codes run on remote WSL in VS Code
 5. Network - ping_in_tcp_client.c 
 6. Network - ping_in_tcp_server.c 
 7. Network - tcp_client_startup_and_tear_down.c
-8. Memory - cache_size_final.c
-9. Memory - memory_bw.c 
-10. Memory - page_fault_minor.c (Minor Fault)
-11. Memory - page-fault_major.c (Major fault)
+8. Network - ping_in_tcp_server_remote.c
+9. Memory - cache_size_final.c
+10. Memory - memory_bw.c 
+11. Memory - page_fault_minor.c (Minor Fault)
+12. Memory - page-fault_major.c (Major fault)
 
 
 VS code for windows : Compiler used VS Code
@@ -137,15 +138,15 @@ Run Command : sudo ./src/Network/ping_in_icmp <host ip>
 
 Socket based remote measurements:
 --------------------------
-ping_in_tcp_server.c:
-Build Command: gcc-9  -g src/Network/ping_in_tcp_server.c -o src/Network/ping_in_tcp_server
+ping_in_tcp_server_remote.c:
+Build Command: gcc-9  -g src/Network/ping_in_tcp_server_remote.c -o src/Network/ping_in_tcp_server_remote
 
 
 ping_in_tcp_client.c:
 Build Command : gcc-9  -g src/Network/ping_in_tcp_client.c -o src/Network/ping_in_tcp_client
 
 Running Files : 
-Run Command : ./src/Network/ping_in_tcp_server  (on server)
+Run Command : ./src/Network/ping_in_tcp_server_remote  (on server)
 Run Command : sudo ./src/Network/ping_in_tcp_client (in terminal with hostname set that of remote on line 155)
 
 Socket based local measurements:
@@ -160,19 +161,6 @@ Build Command : gcc-9  -g src/Network/ping_in_tcp_client.c -o src/Network/ping_i
 Running Files : 
 Run Command : ./src/Network/ping_in_tcp_server  (in one terminal)
 Run Command : sudo ./src/Network/ping_in_tcp_client (in another terminal with hostname set to "127.0.0.1" in line 155 ### servaddr.sin_addr.s_addr = inet_addr("192.168.43.90");  ###)
-
-
-TCP based local measurements:
--------------------------------
-ping_in_tcp_server.c:
-Build Command: gcc-9  -g src/Network/ping_in_tcp_server.c -o ping_in_tcp_server
-
-tcp_client_startup_and_tear_down.c: 
-Build Command : gcc-9  -g src/Network/tcp_client_startup_and_tear_down.c -o src/Network/tcp_client_startup_and_tear_down
-
-Running files :
-Run Command : ./src/Network/ping_in_tcp_server  (in one terminal)
-Run Command : ./src/Network/tcp_client_startup_and_tear_down (in another terminal with hostname set to "127.0.0.1" in line50 ###servaddr.sin_addr.s_addr = inet_addr("142.250.80.100");###)
 
 
 TCP based remote measurements (WORKING):

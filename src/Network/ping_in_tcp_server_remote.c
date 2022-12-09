@@ -1,3 +1,4 @@
+#include <arpa/inet.h>
 #include <stdio.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -12,7 +13,7 @@
 
 long int tick_start_server , tick_end_server , total_tick_end_server, average_total_tick_end_server=0;
 #define MAX 4000000
-#define PORT 80
+#define PORT 8080
 #define SA struct sockaddr
 
 cpu_set_t  mask;
@@ -25,20 +26,13 @@ uint64_t rdtsc(){
  
 
 
-void assignToThisCore(int core_id)
-{
-     CPU_ZERO(&mask);
-     CPU_SET(core_id, &mask);
-     sched_setaffinity(0, sizeof(mask), &mask);
- }
-// Function designed for chat between client and server.
 void func(int connfd)
 {
 	
 	int n;
 	char buff_from_client[MAX]; 
 	int iteration_count = 1000;
-	int transfer_size[] ={352,400,800,1600,3200,6400,12800,16370,16374,25600};
+	int transfer_size[] ={352,400,800,1600,3200,6400,12800,16370,16374,25600,51600,102400,204800};
 	int length_of_array = sizeof(transfer_size)/sizeof(int); 
 	int iter = 0;
 	while(iter<length_of_array)
@@ -69,23 +63,23 @@ void func(int connfd)
 	write(connfd, buff, sizeof(buff));
 
     
-	int n2;
+	/*int n2;
 	char second_buff_from_client[MAX];
 	read(connfd, second_buff_from_client, sizeof(second_buff_from_client));
-	printf("From Client : %s", second_buff_from_client);
-	char buff_second[] = "exit";
+	//printf("From Client : %s", second_buff_from_client);
+	//char buff_second[] = "exit";
     write(connfd, buff_second, sizeof(buff_second));
 	
 	if ((strncmp(buff_second, "exit", 4)) == 0) {
 			printf("Server Exit...\n");
 			return;
-		}
+		}*/
 }
 
 // Driver function
 int main()
 {
-	assignToThisCore(0);
+	//assignToThisCore(0);
 	int sockfd, connfd, len;
 	struct sockaddr_in servaddr, cli;
 
@@ -102,8 +96,8 @@ int main()
 
 	// assign IP, PORT
 	servaddr.sin_family = AF_INET ;// AF_INET;
-	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);//htonl("192.68.43.90"); //htonl(INADDR_ANY);//inet_addr("192.168.43.12") ;//"192.168.43.12";//htonl(INADDR_ANY);
-	servaddr.sin_port = htons(PORT);
+	servaddr.sin_addr.s_addr = INADDR_ANY; //inet_addr("192.168.43.12");//inet_addr("127.0.0.1");// //htonl(INADDR_ANY);//inet_addr("192.168.43.12") ;//"192.168.43.12";//htonl(INADDR_ANY);
+	servaddr.sin_port = htons(8080);
 
 	// Binding newly created socket to given IP and verification
 	if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
