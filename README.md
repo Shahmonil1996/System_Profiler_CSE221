@@ -12,6 +12,7 @@ Codes run on Windows system from VS Code :
 5. CPU - rdtsc.c
 6. CPU - thread.c 
 7. CPU - context_switch.c 
+8. CPU - context_switch_thread.c
 
 Codes run on remote WSL in VS Code
 1. File - contention_final.c
@@ -29,6 +30,8 @@ Codes run on remote WSL in VS Code
 
 VS code for windows : Compiler used VS Code
 VS code files added in the github repository
+Prerequisities:
+To run the commands in windows, we had to move all background processes to a core which we are not using , by using the "setAffinity" utility in Task Manager. 
 
 Run commands :
 Function_Overheads.c : 
@@ -65,6 +68,11 @@ context_switch.c:
 ------------------
 Build Command : gcc.exe src/CPU/context_switch.c -o src/CPU/context_switch.exe
 Run Command : ./src/CPU/context_switch.exe
+
+context_switch_thread.c:
+------------------
+Build Command : gcc.exe src/CPU/context_switch_thread.c -o src/CPU/context_switch_thread.exe
+Run Command : ./src/CPU/context_switch_thread.exe
 
 
 WSL on VS Code:
