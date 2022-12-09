@@ -33,38 +33,38 @@ VS code files added in the github repository
 Run commands :
 Function_Overheads.c : 
 -----------------------
-Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\Function_Overheads.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\Function_Overheads.exe
-Run Command : Function_Overheads.exe
+Build Command : gcc.exe src/CPU/Function_Overheads.c -o src/CPU/Function_Overheads.exe
+Run Command : ./src/CPU/Function_Overheads.exe
 
 getpid.c:
 ----------
-Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\getpid.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\getpid.exe
-Run Command : ./getpid.exe
+Build Command : gcc.exe src/CPU/getpid.c -o src/CPU/getpid.exe
+Run Command : ./src/CPU/getpid.exe
 
 loop_overhead.c:
 --------------------
-Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\loop_overhead.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\loop_overhead.exe
-Run Command : ./loop_overhead.exe
+Build Command : gcc.exe src/CPU/loop_overhead.c -o src/CPU/loop_overhead.exe
+Run Command : ./src/CPU/loop_overhead.exe
 
 new_process_cmd.c:
 -------------------
-Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\new_process_cmd.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\new_process_cmd.ex
-Run Command : ./new_process_cmd.exe
+Build Command : gcc.exe src/CPU/new_process_cmd.c -o src/CPU/new_process_cmd.exe
+Run Command : ./src/CPU/new_process_cmd.exe
 
 rdtsc.c:
 ---------
-Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\rdtsc.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\rdtsc.exe
-Run Command : ./rdtsc.exe
+Build Command : gcc.exe src/CPU/rdtsc.c -o src/CPU/rdtsc.exe
+Run Command : ./src/CPU/rdtsc.exe
 
 thread.c 
 ----------
-Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\thread.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\System_Profiler_CSE221\src\CPU\thread.exe
-Run Command : thread.exe
+Build Command : gcc.exe src/CPU/thread.c -o src/CPU/thread.exe
+Run Command : ./src/CPU/thread.exe
 
 context_switch.c:
 ------------------
-Build Command : C:\msys64\mingw64\bin\gcc.exe -fdiagnostics-color=always -g C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\context_switch.c -o C:\Users\shahm\Downloads\Courses\UCSD\CSE221\Project\Codes\context_switch.exe
-Run Command : ./context_switch.exe
+Build Command : gcc.exe src/CPU/context_switch.c -o src/CPU/context_switch.exe
+Run Command : ./src/CPU/context_switch.exe
 
 
 WSL on VS Code:
@@ -72,15 +72,15 @@ Compiler Used : gcc
  
 contention_final.c:
 ---------------------
-Build Command : /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/contention_final.c -o /home/monils/contention_final	
+Build Command : gcc-9  -g src/File/contention_final.c -o src/File/contention_final	
 Run Command : (can vary num processes from 1 to 30.. Sudo needed to flush cache
-sudo ./contention_final <num_processes>
+sudo ./src/File/contention_final <num_processes>
 
 file_cache_size_final.c:
 -------------------------
-Build Command : /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/file_cache_size_final.c -o /home/monils/file_cache_size_final
+Build Command : gcc-9  -g src/File/file_cache_size_final.c -o src/File/file_cache_size_final
 Run Command : (We downloaded the 10GB binary file from : https://testfiledownload.com/)
-sudo ./file_cache_size_final 10GB.bin
+sudo ./src/File/file_cache_size_final 10GB.bin
 
 file_read_final.c :
 ------------------- 
@@ -91,99 +91,87 @@ Prerequisities :
 	2.1 Mounted remote file path using : sudo sshfs -o allow_other,IdentityFile=/home/monils/.ssh/id_rsa.pub  <username>@ieng6-ece-20.ucsd.edu:<remote_dir_path> /mnt/remote_dir
 	2.2 Created files with names and sizes as the name of the file : "log8kb","log16kb","log32kb","log64kb","log128kb","log256kb","log512kb","log1mb"
 	
-Build command : /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/file_read_final.c -o /home/monils/file_read_final
+Build command : gcc-9  -g src/File/file_read_final.c -o src/File/file_read_final
 Run Commands : 
-sudo ./file_read_final 0 (Local)
-sudo ./file_read_final 1 (Remote)
+sudo ./src/File/file_read_final 0 (Local)
+sudo ./src/File/file_read_final 1 (Remote)
 
 
 cache_size_final.c:
 ------------------- 
-Build Command : 	/usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/cache_size_final.c -o /home/monils/cache_size_final -D _GNU_SOURCE
-Run Command : ./cache_size_final
+Build Command : 	gcc-9  -g src/Memory/cache_size_final.c -o src/Memory/cache_size_final -D _GNU_SOURCE
+Run Command : ./src/Memory/cache_size_final
+
+memory_bw.c:
+------------
+Build Command : gcc-9  -g src/Memory/memory_bw.c -o src/Memory/memory_bw -D _GNU_SOURCE
+
+Run Command : ./src/Memory/memory_bw
+
+page_fault.c (Minor):
+--------------
+Build Command: gcc-9  -g src/Memory/page_fault.c -o src/Memory/page_fault -D _GNU_SOURCE 
+
+Run Command : ./src/Memory/page_fault
+
+page-fault.c (Major):
+--------------
+Build Command: gcc-9  -g src/Memory/page-fault.c -o src/Memory/page-fault
+
+Run Command : ./src/Memory/page-fault <file with size greater than a few mbs>
+
 
 ping_in_icmp.c : 
 -----------------
-Build Command : /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/ping_in_icmp.c -o /home/monils/CSE221_dbasu/CSE221_Project/ping_in_icmp
-Run Command : sudo ./ping_in_icmp <host ip>
+Build Command : gcc-9  -g src/Network/ping_in_icmp.c -o src/Network/ping_in_icmp
+Run Command : sudo ./src/Network/ping_in_icmp <host ip>
 
 
 Socket based remote measurements:
 --------------------------
 ping_in_tcp_server.c:
-Build Command: /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_server.c -o /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_server
+Build Command: gcc-9  -g src/Network/ping_in_tcp_server.c -o src/Network/ping_in_tcp_server
 
 
 ping_in_tcp_client.c:
-Build Command : /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_client.c -o /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_client
-Run Command : sudo ./ping_in_tcp_client
+Build Command : gcc-9  -g src/Network/ping_in_tcp_client.c -o src/Network/ping_in_tcp_client
 
 Running Files : 
-Run Command : ./ping_in_tcp_server  (on server)
-Run Command : sudo ./ping_in_tcp_client (in terminal with hostname set that of remote on line 155)
+Run Command : ./src/Network/ping_in_tcp_server  (on server)
+Run Command : sudo ./src/Network/ping_in_tcp_client (in terminal with hostname set that of remote on line 155)
 
 Socket based local measurements:
 --------------------------
 ping_in_tcp_server.c:
-Build Command: /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_server.c -o /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_server
+Build Command: gcc-9  -g src/Network/ping_in_tcp_server.c -o src/Network/ping_in_tcp_server
 
 
 ping_in_tcp_client.c:
-Build Command : /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_client.c -o /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_client
-Run Command : sudo ./ping_in_tcp_client
+Build Command : gcc-9  -g src/Network/ping_in_tcp_client.c -o src/Network/ping_in_tcp_client
 
 Running Files : 
-Run Command : ./ping_in_tcp_server  (in one terminal)
-Run Command : sudo ./ping_in_tcp_client (in another terminal with hostname set to "127.0.0.1" in line 155 ### servaddr.sin_addr.s_addr = inet_addr("192.168.43.90");  ###)
+Run Command : ./src/Network/ping_in_tcp_server  (in one terminal)
+Run Command : sudo ./src/Network/ping_in_tcp_client (in another terminal with hostname set to "127.0.0.1" in line 155 ### servaddr.sin_addr.s_addr = inet_addr("192.168.43.90");  ###)
 
 
 TCP based local measurements:
 -------------------------------
 ping_in_tcp_server.c:
-Build Command: /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_server.c -o /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_server
+Build Command: gcc-9  -g src/Network/ping_in_tcp_server.c -o ping_in_tcp_server
 
 tcp_client_startup_and_tear_down.c: 
-Build Command : /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/tcp_client_startup_and_tear_down.c -o /home/monils/CSE221_dbasu/CSE221_Project/tcp_client_startup_and_tear_down
+Build Command : gcc-9  -g src/Network/tcp_client_startup_and_tear_down.c -o src/Network/tcp_client_startup_and_tear_down
 
 Running files :
-Run Command : ./ping_in_tcp_server  (in one terminal)
-Run Command : ./tcp_client_startup_and_tear_down (in another terminal with hostname set to "127.0.0.1" in line50 ###servaddr.sin_addr.s_addr = inet_addr("142.250.80.100");###)
+Run Command : ./src/Network/ping_in_tcp_server  (in one terminal)
+Run Command : ./src/Network/tcp_client_startup_and_tear_down (in another terminal with hostname set to "127.0.0.1" in line50 ###servaddr.sin_addr.s_addr = inet_addr("142.250.80.100");###)
 
-TCP based remote measurements:
--------------------------------
-ping_in_tcp_server.c:
-Build Command: /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_server.c -o /home/monils/CSE221_dbasu/CSE221_Project/ping_in_tcp_server
-
-tcp_client_startup_and_tear_down.c: 
-Build Command : /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/tcp_client_startup_and_tear_down.c -o /home/monils/CSE221_dbasu/CSE221_Project/tcp_client_startup_and_tear_down
-
-Running files :
-Run Command : ./ping_in_tcp_server  (in one terminal)
-Run Command : ./tcp_client_startup_and_tear_down (in another terminal with hostname set in line50 ###servaddr.sin_addr.s_addr = inet_addr("142.250.80.100");###)
 
 TCP based remote measurements (WORKING):
 -------------------------------
 tcp_client_startup_and_tear_down.c: 
-Build Command : /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/tcp_client_startup_and_tear_down.c -o /home/monils/CSE221_dbasu/CSE221_Project/tcp_client_startup_and_tear_down
+Build Command : gcc-9  -g src/Network/tcp_client_startup_and_tear_down.c -o src/Network/tcp_client_startup_and_tear_down
 
 Running files :
-Run Command : ./tcp_client_startup_and_tear_down (in another terminal with hostname set to "142.250.80.100" in line50 ###servaddr.sin_addr.s_addr = inet_addr("142.250.80.100");###)
-
-memory_bw.c:
-------------
-Build Command : /usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/memory_bw.c -o /home/monils/CSE221_dbasu/CSE221_Project/memory_bw -D _GNU_SOURCE
-
-Run Command : ./memory_bw
-
-page_fault.c (Minor):
---------------
-/usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/page_fault.c -o /home/monils/CSE221_dbasu/CSE221_Project/page_fault -D _GNU_SOURCE 
-
-Run Command : ./page_fault
-
-page-fault.c (Major):
---------------
-/usr/bin/gcc-9 -fdiagnostics-color=always -g /home/monils/CSE221_dbasu/CSE221_Project/page-fault.c -o /home/monils/CSE221_dbasu/CSE221_Project/page-fault
-
-Run Command : ./page-fault <file with size greater than a few mbs>
+Run Command : ./src/Network/tcp_client_startup_and_tear_down (in another terminal with hostname set to "142.250.80.100" in line50 ###servaddr.sin_addr.s_addr = inet_addr("142.250.80.100");###)
 
